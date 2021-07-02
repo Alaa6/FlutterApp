@@ -132,29 +132,54 @@ class _RondomWordsState extends State<RondomWords> {
   }
 
   void _favoriteItems() {
+    
+
+// Find the ScaffoldMessenger in the widget tree
+// and use it to show a SnackBar.
+
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
       final tiles = _saved.map(
         (WordPair pair) {
+          final snackBar = SnackBar(
+      content: Text('you delete the item (  $pair  ) !') ,
+      action: SnackBarAction(
+        label: 'Undo' ,
+        onPressed: (){
+          setState(() {
+            _saved.add(pair);  
+          });
+        },
+      ),
+      );
           return ListTile(
-            title: Text(pair.asPascalCase,
-                style: _biggerFont, textDirection: TextDirection.ltr),
-                onLongPress: ()=> showDialog<String>(
-    context: context,
-     builder: (BuildContext context)=>
-       AlertDialog(
-         title:Text("UnFavorite Item") ,
-         content:Text("Do you sure to delete this Item from your favorites") ,
-         actions: [
-           TextButton(onPressed:()=> { _saved.remove(pair) }, child: Text("Yes")) ,
-           TextButton(onPressed:()=> Navigator.pop(context), child: Text("No"))
-
-         ],
-       )
-
-     )
-);
-          
+              title: Text(pair.asPascalCase,
+                  style: _biggerFont, textDirection: TextDirection.ltr),
+              onLongPress: () => showDialog<String>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) => AlertDialog(
+                        title: Text("UnFavorite Item"),
+                        content: Text(
+                            "Do you sure to delete this Item from your favorites"),
+                        actions: [
+                          TextButton(
+                              onPressed: () => {
+                                    setState(() {
+                                      _saved.remove(pair);
+                                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                      Navigator.of(context).pop();
+                                    })
+                                  },
+                              child: Text("Yes")),
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("No"))
+                        ],
+                        elevation: 24.0,
+                        //  shape: CircleBorder(),
+                      
+                      )));
         },
       ); // arrayextButton
 
@@ -177,12 +202,11 @@ class _RondomWordsState extends State<RondomWords> {
   void _goToDetails() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
-      return
-        ItemDetails();
-          //  SizedBox(
-          //   width: 250,
-          //   height: 250,
-          // child:
+      return ItemDetails();
+      //  SizedBox(
+      //   width: 250,
+      //   height: 250,
+      // child:
       //     Stack(
       //   alignment: AlignmentDirectional.topStart,
       //   fit: StackFit.expand,
@@ -249,20 +273,20 @@ class _RondomWordsState extends State<RondomWords> {
     }));
   }
 
-  Future<void> _showDialog () {
+  Future<void> _showDialog() {
     return showDialog<String>(
-    context: context,
-     builder: (BuildContext context)=>
-       AlertDialog(
-         title:Text("UnFavorite Item") ,
-         content:Text("Do you sure to delete this Item from your favorites") ,
-         actions: [
-           TextButton(onPressed:()=> Navigator.pop(context), child: Text("Yes")) ,
-          TextButton(onPressed:()=> Navigator.pop(context), child: Text("No"))
-
-         ],
-       )
-
-     );
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text("UnFavorite Item"),
+              content:
+                  Text("Do you sure to delete this Item from your favorites"),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("Yes")),
+                TextButton(
+                    onPressed: () => Navigator.pop(context), child: Text("No"))
+              ],
+            ));
   }
 }
