@@ -139,9 +139,24 @@ class _RondomWordsState extends State<RondomWords> {
           return ListTile(
             title: Text(pair.asPascalCase,
                 style: _biggerFont, textDirection: TextDirection.ltr),
-          );
+                onLongPress: ()=> showDialog<String>(
+    context: context,
+     builder: (BuildContext context)=>
+       AlertDialog(
+         title:Text("UnFavorite Item") ,
+         content:Text("Do you sure to delete this Item from your favorites") ,
+         actions: [
+           TextButton(onPressed:()=> { _saved.remove(pair) }, child: Text("Yes")) ,
+           TextButton(onPressed:()=> Navigator.pop(context), child: Text("No"))
+
+         ],
+       )
+
+     )
+);
+          
         },
-      ); // array
+      ); // arrayextButton
 
       final divided = tiles.isNotEmpty
           ? ListTile.divideTiles(context: context, tiles: tiles).toList()
@@ -232,5 +247,22 @@ class _RondomWordsState extends State<RondomWords> {
       // );
       // );
     }));
+  }
+
+  Future<void> _showDialog () {
+    return showDialog<String>(
+    context: context,
+     builder: (BuildContext context)=>
+       AlertDialog(
+         title:Text("UnFavorite Item") ,
+         content:Text("Do you sure to delete this Item from your favorites") ,
+         actions: [
+           TextButton(onPressed:()=> Navigator.pop(context), child: Text("Yes")) ,
+          TextButton(onPressed:()=> Navigator.pop(context), child: Text("No"))
+
+         ],
+       )
+
+     );
   }
 }
